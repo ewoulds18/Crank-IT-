@@ -23,7 +23,7 @@ end
 local function initWheel()
     local coin = gfx.image.new("images/wheel")
     coinSprite = gfx.sprite.new(coin)
-    coinSprite:moveTo(180, 120)
+    coinSprite:moveTo(200, 120)
     coinSprite:setScale(5)
     coinSprite:add()
 end
