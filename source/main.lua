@@ -47,6 +47,8 @@ end
 
 init()
 
+
+--[[ IDEA: Docking the crank opens the store]]
 local function PlayerInput()
     --[[rev will be 1 or -1 if it hits the top or bottom of the crank wheel]]
     local rev = playdate.getCrankTicks(2)
