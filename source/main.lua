@@ -6,26 +6,20 @@ import "CoreLibs/crank"
 
 local gfx <const> = playdate.graphics
 
-local playTimer = nil
-local playTime = 30 * 1000
-
 local cranks = 0
 
 local lastRev = 0
 local fullRev = false
 
-local coinSprite = nil
+local wheelSprite = nil
 
-local function resetTimer()
-    playTimer = playdate.timer.new(playTime, playTime, 0, playdate.easingFunctions.linear)
-end
-
+--#region Init Functions 
 local function initWheel()
-    local coin = gfx.image.new("images/wheel")
-    coinSprite = gfx.sprite.new(coin)
-    coinSprite:moveTo(200, 120)
-    coinSprite:setScale(5)
-    coinSprite:add()
+    local wheel = gfx.image.new("images/wheel")
+    wheelSprite = gfx.sprite.new(wheel)
+    wheelSprite:moveTo(200, 120)
+    wheelSprite:setScale(5)
+    wheelSprite:add()
 end
 
 local function initBK()
@@ -39,16 +33,14 @@ local function initBK()
 end
 
 local function init()
-    math.randomseed(playdate.getSecondsSinceEpoch())
     initBK()
     initWheel()
-    resetTimer()
 end
 
 init()
 
+--#endregion
 
---[[ IDEA: Docking the crank opens the store]]
 local function PlayerInput()
     --[[rev will be 1 or -1 if it hits the top or bottom of the crank wheel]]
     local rev = playdate.getCrankTicks(2)
@@ -83,12 +75,15 @@ local function PlayerInput()
 end
 
 function playdate.update()
-    PlayerInput()
-    
-    coinSprite:setRotation(playdate.getCrankPosition())
 
-    gfx.sprite.update()
+    if playdate.isCrankDocked() then
+        print("Open the shop")
+    else
+        print("Game is running")
+        PlayerInput()
+        wheelSprite:setRotation(playdate.getCrankPosition())
+        gfx.sprite.update()
+    end
 
-    gfx.drawText("Time: " .. math.ceil(playTimer.value / 1000), 5, 5)
-    gfx.drawText("Cranks: " .. cranks, 320, 5)
+    gfx.drawText("Cranks: " .. cranks, 5, 5)
 end
