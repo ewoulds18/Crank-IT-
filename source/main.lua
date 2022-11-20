@@ -63,7 +63,7 @@ local function PlayerInput()
         elsewe set lastRev to the current rev value if rev is none zero    
     ]]--
     if fullRev then
-        cranks = cranks + 1
+        Wheel.addCranks()
         fullRev = false
         lastRev = 0
     else
@@ -77,14 +77,18 @@ end
 function playdate.update()
 
     if playdate.isCrankDocked() then
-        print("Open the shop")
+        -- print("Open the shop")
         -- Reset the Wheels rotation
         wheelSprite:setRotation(0)
     else
-        print("Game is running")
+        -- print("Game is running")
         PlayerInput()
         wheelSprite:setRotation(playdate.getCrankPosition())
+
+        if playdate.buttonJustPressed(playdate.kButtonA) then
+            Wheel.UpgradeCranks()
+        end
     end
     gfx.sprite.update()
-    gfx.drawText("Cranks: " .. cranks, 5, 5)
+    gfx.drawText("Cranks: " .. Wheel.getCranks(), 5, 5)
 end

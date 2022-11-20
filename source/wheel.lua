@@ -5,6 +5,8 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 
 local gfx <const> = playdate.graphics
+cranksToAdd = 1
+curCranks = 0
 
 function Wheel.new(image, xPos, yPos)
     local instance = setmetatable({}, Wheel)
@@ -28,6 +30,19 @@ function Wheel:initWheel()
     wheelSprite:setScale(5)
     wheelSprite:add()
     return wheelSprite
+end
+
+function Wheel.addCranks()
+    curCranks += cranksToAdd
+end
+
+function Wheel.getCranks()
+    return curCranks
+end
+
+function Wheel.UpgradeCranks()
+    cranksToAdd += 1
+    print("Cranks to add: ", cranksToAdd)
 end
 
 return Wheel
