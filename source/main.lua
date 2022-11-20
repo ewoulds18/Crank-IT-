@@ -4,6 +4,8 @@ import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/crank"
 
+local Wheel = import "wheel"
+
 local gfx <const> = playdate.graphics
 
 local cranks = 0
@@ -16,10 +18,8 @@ local wheelSprite = nil
 --#region Init Functions 
 local function initWheel()
     local wheel = gfx.image.new("images/wheel")
-    wheelSprite = gfx.sprite.new(wheel)
-    wheelSprite:moveTo(200, 120)
-    wheelSprite:setScale(5)
-    wheelSprite:add()
+    WheelObject = Wheel.new(wheel, 200, 120)
+    wheelSprite = WheelObject:initWheel()
 end
 
 local function initBK()
@@ -78,12 +78,13 @@ function playdate.update()
 
     if playdate.isCrankDocked() then
         print("Open the shop")
+        -- Reset the Wheels rotation
+        wheelSprite:setRotation(0)
     else
         print("Game is running")
         PlayerInput()
         wheelSprite:setRotation(playdate.getCrankPosition())
-        gfx.sprite.update()
     end
-
+    gfx.sprite.update()
     gfx.drawText("Cranks: " .. cranks, 5, 5)
 end
