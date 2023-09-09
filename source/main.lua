@@ -5,16 +5,17 @@ import "CoreLibs/timer"
 import "CoreLibs/crank"
 
 local Wheel = import "wheel"
+local Shop = import "shop"
 
 local gfx <const> = playdate.graphics
-
-local cranks = 0
 
 local lastRev = 0
 local fullRev = false
 
 local wheelSprite = nil
+local shopInstance = nil
 
+local isShopOpen = false
 --#region Init Functions 
 local function initWheel()
     local wheel = gfx.image.new("images/wheel")
@@ -32,9 +33,14 @@ local function initBK()
         end)
 end
 
+local function initShop()
+    shopInstance = Shop.new()
+end
+
 local function init()
     initBK()
     initWheel()
+    initShop()
 end
 
 init()
@@ -42,7 +48,7 @@ init()
 --#endregion
 
 local function PlayerInput()
-    --[[rev will be 1 or -1 if it hits the top or bottom of the crank wheel]]
+    -- rev will be 1 or -1 if it hits the top or bottom of the crank wheel
     local rev = playdate.getCrankTicks(2)
     --[[
         This if checks toi make sure that lastRev and rev are equal
@@ -52,9 +58,10 @@ local function PlayerInput()
     if lastRev == rev and (rev == 1 or rev == -1 )then
         if lastRev == 1 and rev == 1 then
             fullRev = true
-        end
-        if lastRev == -1 and rev == -1 then
+        elseif lastRev == -1 and rev == -1 then
             fullRev = true
+        else
+            lastRev = 0
         end
         print("Rev: ", rev)
     end
@@ -74,20 +81,40 @@ local function PlayerInput()
     end
 end
 
+local function OpenShop()
+    if isShopOpen then
+        if playdate.buttonJustPressed(playdate.kButtonA) then
+            if shopInstance ~= nil then
+                if shopInstance.CheckIfValidPurchase(Wheel.getCranks()) then
+                    Wheel.UpgradeCranks(1)
+                    Wheel.subCranks(shopInstance.GetUpgradeAmount())
+                else
+                    print("Not enough Money")
+                end
+            end
+        elseif playdate.buttonIsPressed(playdate.kButtonB) then
+            isShopOpen = false
+        end
+    else
+        print "Shop Closed"
+    end
+end
+
 function playdate.update()
 
     if playdate.isCrankDocked() then
-        -- print("Open the shop")
+        isShopOpen = true
+        OpenShop()
         -- Reset the Wheels rotation
         wheelSprite:setRotation(0)
     else
         -- print("Game is running")
         PlayerInput()
         wheelSprite:setRotation(playdate.getCrankPosition())
-
-        if playdate.buttonJustPressed(playdate.kButtonA) then
+        
+        --[[if playdate.buttonJustPressed(playdate.kButtonA) then
             Wheel.UpgradeCranks()
-        end
+        end]]
     end
     gfx.sprite.update()
     gfx.drawText("Cranks: " .. Wheel.getCranks(), 5, 5)

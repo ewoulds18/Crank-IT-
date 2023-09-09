@@ -36,13 +36,22 @@ function Wheel.addCranks()
     curCranks += cranksToAdd
 end
 
+function Wheel.subCranks(amount)
+    curCranks -= amount
+end
+
 function Wheel.getCranks()
     return curCranks
 end
 
-function Wheel.UpgradeCranks()
-    cranksToAdd += 1
+function Wheel.UpgradeCranks(upgradeAmount)
+    cranksToAdd += upgradeAmount
     print("Cranks to add: ", cranksToAdd)
+end
+
+function Wheel.RemoveCranks(cranksToRemove)
+    curCranks -= cranksToRemove
+    print("Cranks to remove: ", cranksToRemove)
 end
 
 return Wheel
