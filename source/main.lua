@@ -85,7 +85,9 @@ local function OpenShop()
     if isShopOpen then
         if playdate.buttonJustPressed(playdate.kButtonA) then
             if shopInstance ~= nil then
+                -- First check if there is enough cranks to purchase the updgrade
                 if shopInstance.CheckIfValidPurchase(Wheel.getCranks()) then
+                    -- Increasing Cranks and subtracking cost of upgrade
                     Wheel.UpgradeCranks(1)
                     Wheel.subCranks(shopInstance.GetUpgradeAmount())
                 else
@@ -93,10 +95,9 @@ local function OpenShop()
                 end
             end
         elseif playdate.buttonIsPressed(playdate.kButtonB) then
+            -- exit shop
             isShopOpen = false
         end
-    else
-        print "Shop Closed"
     end
 end
 
