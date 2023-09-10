@@ -102,7 +102,9 @@ local function OpenShop()
 end
 
 function playdate.update()
-
+    if wheelSprite == nil then
+        return
+    end
     if playdate.isCrankDocked() then
         isShopOpen = true
         OpenShop()
