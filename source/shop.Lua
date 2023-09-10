@@ -2,7 +2,7 @@ Shop = {}
 Shop.__index = Shop
 
 local upgradeAmount = 10
-local scaling = 1
+local numPurchased = 0
 
 function Shop.new()
     local instance = setmetatable({}, Shop)
@@ -14,6 +14,7 @@ function Shop.CheckIfValidPurchase(amount)
     if amount < upgradeAmount then
         print("Not enough money")
         canBuy = false
+        numPurchased += 1
         IncreaseUpgradeAmount()
     end
     return canBuy
@@ -24,7 +25,7 @@ function Shop.GetUpgradeAmount()
 end
 
 function IncreaseUpgradeAmount()
-    upgradeAmount = upgradeAmount + math.ceil(1*scaling)
+    upgradeAmount = 4 * (2^numPurchased) + upgradeAmount
 end
 
 return Shop
